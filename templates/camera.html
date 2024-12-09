@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Emotion Detection</title>
+    <style>
+        body {
+            text-align: center;
+            margin-top: 50px;
+            font-family: Arial, sans-serif;
+        }
+        video, img {
+            border: 2px solid #555;
+            border-radius: 10px;
+            display: block;
+            margin: 20px auto;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #stopButton {
+            background-color: #f44336;
+        }
+        #stopButton:hover {
+            background-color: #d32f2f;
+        }
+        #refreshButton {
+            background-color: #007BFF;
+        }
+        #refreshButton:hover {
+            background-color: #0056b3;
+        }
+        #emotionDisplay {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Real-time Emotion Detection</h1>
+    <img id="videoFeed" src="" alt="Camera is off">
+    <div>
+        <button id="startButton">Start Camera</button>
+        <button id="stopButton">Stop Camera</button>
+        <button id="refreshButton">Refresh</button>
+    </div>
+    <div id="emotionDisplay">Press "Start Camera" to begin emotion detection.</div>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const refreshButton = document.getElementById('refreshButton');
+        const videoFeed = document.getElementById('videoFeed');
+        const emotionDisplay = document.getElementById('emotionDisplay');
+
+        // Start Camera Stream
+        startButton.addEventListener('click', () => {
+            videoFeed.src = "/video_feed";
+            videoFeed.alt = "Emotion Detection Stream";
+
+            // Notify the server to start the camera
+            fetch('/start_camera', { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        emotionDisplay.textContent = "Camera is running... Detecting emotions.";
+                    } else {
+                        alert('Failed to start the camera stream.');
+                    }
+                })
+                .catch(err => {
+                    console.error('Error starting the camera:', err);
+                    alert('An error occurred while starting the camera.');
+                });
+        });
+
+        // Stop Camera Stream
+        stopButton.addEventListener('click', () => {
+            videoFeed.src = "";
+            videoFeed.alt = "Camera is off";
+
+            // Notify the server to stop the camera
+            fetch('/stop_camera', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        const { time_taken, most_detected_emotion } = data;
+                        emotionDisplay.innerHTML = `
+                            <p>Camera stopped successfully.</p>
+                            <p><strong>Most Detected Emotion:</strong> ${most_detected_emotion}</p>
+                            <p><strong>Time Taken:</strong> ${time_taken}</p>
+                        `;
+                    } else {
+                        emotionDisplay.textContent = "Failed to fetch the results.";
+                    }
+                })
+                .catch(err => {
+                    console.error('Error stopping the camera:', err);
+                    emotionDisplay.textContent = "An error occurred while stopping the camera.";
+                });
+        });
+
+        // Refresh the Page
+        refreshButton.addEventListener('click', () => {
+            location.reload();
+        });
+    </script>
+</body>
+</html>
