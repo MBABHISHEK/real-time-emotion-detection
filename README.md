@@ -35,7 +35,9 @@ This project is a real-time **Emotion Detection System** using Flask, OpenCV, an
    git clone https://github.com/your-repository/emotion-detection
    cd emotion-detection
 2. **Install dependcies :**
-     ```pip install -r requirements.txt
+     ```bash
+     pip install -r requirements.txt
+     ```
 
 3. **Download Dataset:**
    Obtain the FER2013 dataset from Kaggle and place it in the project directory as fer2013.csv.
@@ -44,8 +46,10 @@ This project is a real-time **Emotion Detection System** using Flask, OpenCV, an
 4. **Train the Model (Optional):**
  ```bash
  python train_model.py
+```
 
 5. **Run the Application:**
   ```bash
   python app.py
+```
 Access the application at http://127.0.0.1:5000/.
