@@ -44,12 +44,12 @@ This project is a real-time **Emotion Detection System** using Flask, OpenCV, an
 
 
 4. **Train the Model (Optional):**
- ```bash
- python train_model.py
-```
+   ```bash
+    python train_model.py
+
 
 5. **Run the Application:**
-  ```bash
-  python app.py
+   ```bash
+     python app.py
 ```
 Access the application at http://127.0.0.1:5000/.
